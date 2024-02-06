@@ -55,7 +55,7 @@ function App() {
             
             {isOwner && (
                 <button onClick={() => sendWithdrawalRequest()} type="button" className='App__withdraw'>
-                    Widthdraw 0.7 TON
+                    Widthdraw 0.6 TON
                 </button>
             )}
         </>)}
