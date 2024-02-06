@@ -21,6 +21,8 @@ function App() {
 
   const isOwner = walletAddress === owner_address?.toRawString() ? true : false;
 
+  // a
+
   return (
     <div className="App">
       <div className="App__connect">
