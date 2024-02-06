@@ -3,6 +3,7 @@ import { TonConnectButton, useTonAddress } from '@tonconnect/ui-react';
 import { useMainContract } from './hooks/useMainContract';
 import { useTonConnect } from './hooks/useTonConnect';
 import { fromNano } from 'ton-core';
+import WebApp from '@twa-dev/sdk';
 
 function App() {
   const { 
@@ -21,7 +22,9 @@ function App() {
 
   const isOwner = walletAddress === owner_address?.toRawString() ? true : false;
 
-  // a
+  const showAlert = () => {
+    WebApp.showAlert("Hey there!");
+  };
 
   return (
     <div className="App">
@@ -29,6 +32,12 @@ function App() {
         <TonConnectButton />
       </div>
       <div>
+        <div className="Card">
+          <div>{WebApp.platform}</div>
+          <button onClick={() => showAlert()} type="button" className='App__send'>
+            Show alert
+          </button>
+        </div>
         <div className='Card'>
           <b>Our contract Address</b>
           <div className='Hint'>{contract_address}</div>
