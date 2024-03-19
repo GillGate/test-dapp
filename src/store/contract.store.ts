@@ -2,7 +2,6 @@ import { reactive, readonly } from "vue";
 import { getClient } from "../service/endpoint.service";
 import { MainContract } from "../contracts/MainContract";
 import { Address, OpenedContract, fromNano } from "ton-core";
-import "dotenv/config";
 
 const state = reactive({
     balance: 0,
