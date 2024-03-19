@@ -6,17 +6,15 @@
   Recent sender: {{ recentSender }}
 </template>
 <script setup lang="ts">
-  import { inject, onBeforeMount, reactive, ref, computed } from 'vue';
+  import { inject, onBeforeMount, computed } from 'vue';
 
   const contractStore:any = inject("contractStore");
 
   onBeforeMount(async () => {
     function loadContractState() {
       contractStore.methods.initContractState()
-      .then(msg => {
-        console.log(msg);
-      })
-      .catch(e => console.warn(e))
+      .then(console.log)
+      .catch(console.warn)
       .finally(() => {
         setTimeout(loadContractState, 6500);
       })

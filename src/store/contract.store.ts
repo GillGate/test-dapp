@@ -9,7 +9,7 @@ const state = reactive({
     data: {}
 });
 const methods = {
-    async initContractState() {
+    async initContractState():Promise<any> {
         const client = await getClient();
 
         if(client !== undefined) {
