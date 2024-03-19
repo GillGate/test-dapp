@@ -1,9 +1,15 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import vue from '@vitejs/plugin-vue'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), nodePolyfills()],
-  base: "/first-dapp/",
+  envPrefix: "DAPP",
+  server: {
+    open: true
+  },
+  plugins: [
+    vue(),
+    nodePolyfills(),
+  ],
 })
