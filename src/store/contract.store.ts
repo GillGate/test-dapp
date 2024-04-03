@@ -1,27 +1,42 @@
 import { reactive, readonly } from "vue";
 import { getClient } from "../service/endpoint.service";
-import { MainContract } from "../contracts/MainContract";
-import { Address, OpenedContract, fromNano } from "ton-core";
+import { MainContract, MainContractConfig } from "../contracts/MainContract";
+import { Address, OpenedContract, fromNano, toNano } from "ton-core";
+import { sender } from "../service/connector.service";
 
 const state = reactive({
     balance: 0,
-    data: {}
+    data: {} as MainContractConfig,
+    contract: {} as OpenedContract<MainContract>,
+    senderWallet: ''
 });
 const methods = {
+    async initializeContract(client: any) {
+        const contract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_CONTRACT_ADDRESS));
+        state.contract = client.open(contract);
+    },
     async initContractState():Promise<any> {
         const client = await getClient();
 
         if(client !== undefined) {
-            const contract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_CONTRACT_ADDRESS));
-            const mainContract = client.open(contract) as OpenedContract<MainContract>;
-            let { balance } = await mainContract.getBalance();
+            this.initializeContract(client);
+
+            let { balance } = await state.contract.getBalance();
             state.balance = +fromNano(balance);
 
-            let contractData = await mainContract.getData();
-            state.data = contractData;
+            state.data = await state.contract.getData();
 
             return "Contract state updated!";
         }
+    },
+    sendIncrement(incrementBy = 1) {
+        state.contract.sendIncrement(sender, toNano('0.01'), incrementBy);
+    },
+    sendDeposit(amount = 0.5) {
+        state.contract.sendDeposit(sender, toNano(`${amount}`));
+    },
+    setSenderWallet(walletAddress: string) {
+        state.senderWallet = walletAddress;
     }
 };
 const getters = {
@@ -30,6 +45,9 @@ const getters = {
     },
     getData() {
         return state.data;
+    },
+    getSenderWallet() {
+        return state.senderWallet;
     }
 };
 
