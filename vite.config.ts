@@ -7,7 +7,7 @@ export default defineConfig({
   envPrefix: "DAPP",
   base: '/first-dapp/',
   server: {
-    open: true
+    open: true,
   },
   plugins: [
     vue(),

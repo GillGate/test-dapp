@@ -25,6 +25,7 @@ import { connector } from '../service/connector.service';
 import { Address } from 'ton-core';
 
 const contractStore: any = inject("contractStore");
+const tonProofStore: any = inject("tonProofStore");
 
 let walletsList = ref();
 
@@ -34,17 +35,26 @@ onBeforeMount(async () => {
 });
 
 connector.onStatusChange(
-    (wallet) => {
+    async (wallet) => {
         if(wallet !== null) {
             isWalletConnected.value = true;
             accountInfo.value = wallet;
             contractStore.methods.setSenderWallet(walletAddress.value);
-
         }
         else {
             isWalletConnected.value = false;
             accountInfo.value = null;
             contractStore.methods.setSenderWallet('');
+        }
+
+        let tonProof = wallet?.connectItems?.tonProof;
+
+        if(tonProof && !('error' in tonProof)) {
+            let res = await tonProofStore.methods.checkProof(tonProof.proof, wallet?.account);
+
+            console.log("res checkProof", res);
+
+            console.log("acc info", await tonProofStore.methods.getAccountInfo(wallet?.account));
         }
     }, 
     (e) => {
@@ -80,12 +90,16 @@ const disconnectWallet = () => {
     connector.disconnect();
 }
 
-const onWalletClick = (walletInfo: WalletInfo) => {
+const onWalletClick = async (walletInfo: WalletInfo) => {
+    const payload = await tonProofStore.methods.generatePayload();
+
+    console.log(payload);
+
     if(isWalletInfoRemote(walletInfo)) {
         const connectionURL = connector.connect({
             bridgeUrl: walletInfo.bridgeUrl,
             universalLink: walletInfo.universalLink
-        });
+        }, payload);
 
         return window.open(connectionURL, '_blank');
     }
@@ -93,7 +107,7 @@ const onWalletClick = (walletInfo: WalletInfo) => {
     if(isWalletInfoCurrentlyInjected(walletInfo)) {
         return connector.connect({
             jsBridgeKey: walletInfo.jsBridgeKey
-        });
+        }, payload);
     }
 
     window.open(walletInfo.aboutUrl, '_blank');
