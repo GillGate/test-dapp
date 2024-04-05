@@ -6,12 +6,12 @@
   import HomePage from './components/HomePage.vue'
   import contractStore from './store/contract.store';
   import tonProofStore from './store/ton-proof.store';
-  import { connector } from './service/connector.service';
+  // import { connector } from './service/connector.service';
 
   provide("contractStore", contractStore);
   provide("tonProofStore", tonProofStore);
 
-  connector.restoreConnection();
+  // connector.restoreConnection();
 </script>
 <style scoped>
 

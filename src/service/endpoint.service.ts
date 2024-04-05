@@ -10,6 +10,6 @@ export const getClient = async () : Promise<TonClient4 | undefined> => {
         return new TonClient4({ endpoint });
     }
     catch(e) {
-        console.log(e);
+        console.error(e);
     }
 }

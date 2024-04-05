@@ -8,7 +8,7 @@ const state = reactive({
     balance: 0,
     data: {} as MainContractConfig,
     contract: {} as OpenedContract<MainContract>,
-    senderWallet: ''
+    senderWallet: null as string | null
 });
 const methods = {
     async initializeContract(client: any) {
@@ -16,7 +16,19 @@ const methods = {
         state.contract = client.open(contract);
     },
     async initContractState():Promise<any> {
-        const client = await getClient();
+        let client;
+        let connectionAttempts = 0;
+    
+        try {
+            client = await getClient();
+        }
+        catch(e) {
+            if(connectionAttempts < 30) {
+                setTimeout(this.initContractState, 500);
+                console.log("Connection attempt:", connectionAttempts)
+                connectionAttempts++;
+            }
+        }
 
         if(client !== undefined) {
             this.initializeContract(client);
@@ -34,6 +46,9 @@ const methods = {
     },
     sendDeposit(amount = 0.5) {
         state.contract.sendDeposit(sender, toNano(`${amount}`));
+    },
+    withdrawFunds() {
+        state.contract.sendWithdrawalRequest(sender, toNano(`0.025`), toNano(`${state.balance / 2}`))
     },
     setSenderWallet(walletAddress: string) {
         state.senderWallet = walletAddress;

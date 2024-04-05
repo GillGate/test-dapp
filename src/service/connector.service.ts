@@ -1,8 +1,14 @@
-import TonConnect, { SendTransactionRequest, UserRejectsError } from "@tonconnect/sdk";
+import TonConnect from "@tonconnect/sdk";
+import { SendTransactionRequest, TonConnectUI, UserRejectsError } from "@tonconnect/ui";
 import { SenderArguments } from "ton-core";
 
-export const connector = new TonConnect({
+export const customConnector = new TonConnect({
     manifestUrl: import.meta.env.DAPP_MANIFEST_URL
+});
+
+// https://github.com/ton-connect/sdk/tree/main/packages/ui
+export const connector = new TonConnectUI({
+    manifestUrl: import.meta.env.DAPP_MANIFEST_URL,
 });
 
 export const sender = {
