@@ -24,7 +24,7 @@
     // import CustomTonConnect from "../components/CustomTonConnect.vue";
     import TonConnect from "../components/TonConnect.vue";
     import { MainContractConfig } from "../contracts/MainContract";
-    import { Address } from "ton-core";
+    import { Address } from "@ton/core";
 
     const contractStore: any = inject("contractStore");
 

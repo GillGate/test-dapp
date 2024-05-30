@@ -1,7 +1,7 @@
 import { reactive, readonly } from "vue";
 import { getClient } from "../service/endpoint.service";
 import { MainContract, MainContractConfig } from "../contracts/MainContract";
-import { Address, OpenedContract, fromNano, toNano } from "ton-core";
+import { Address, OpenedContract, fromNano, toNano } from "@ton/core";
 import { sender } from "../service/connector.service";
 
 const state = reactive({

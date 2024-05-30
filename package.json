@@ -10,22 +10,22 @@
   },
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",
-    "@tonconnect/sdk": "^3.0.0",
-    "@tonconnect/ui": "^2.0.0",
+    "@tonconnect/sdk": "^3.0.3",
+    "@tonconnect/ui": "^2.0.3",
     "@twa-dev/sdk": "^7.0.0",
     "buffer": "^6.0.3",
-    "ton": "^13.9.0",
-    "ton-core": "^0.53.0",
-    "ton-crypto": "^3.2.0",
-    "vite-plugin-node-polyfills": "^0.21.0",
-    "vue": "^3.4.21"
+    "@ton/ton": "^13.11.1",
+    "@ton/core": "^0.56.3",
+    "@ton/crypto": "^3.2.0",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vue": "^3.4.27"
   },
   "devDependencies": {
     "@types/node": "^20.11.28",
     "@vitejs/plugin-vue": "^5.0.4",
     "less": "^4.2.0",
-    "typescript": "^5.2.2",
-    "vite": "^5.1.6",
-    "vue-tsc": "^1.8.27"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.12",
+    "vue-tsc": "^2.0.19"
   }
 }

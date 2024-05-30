@@ -22,7 +22,7 @@
 import { ref, computed, inject, onBeforeMount } from 'vue';
 import { WalletInfo, isWalletInfoRemote, isWalletInfoCurrentlyInjected } from "@tonconnect/sdk";
 import { customConnector } from '../service/connector.service';
-import { Address } from 'ton-core';
+import { Address } from '@ton/core';
 
 const contractStore: any = inject("contractStore");
 const tonProofStore: any = inject("tonProofStore");

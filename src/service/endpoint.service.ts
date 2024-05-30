@@ -1,5 +1,5 @@
 import { getHttpV4Endpoint } from "@orbs-network/ton-access";
-import { TonClient4 } from 'ton';
+import { TonClient4 } from '@ton/ton';
 
 export const getClient = async () : Promise<TonClient4 | undefined> => {
     try {

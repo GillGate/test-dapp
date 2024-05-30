@@ -4,7 +4,7 @@
 <script setup lang="ts">
     import { onMounted, inject, computed } from "vue";
     import { connector } from "../service/connector.service";
-    import { Address } from "ton-core";
+    import { Address } from "@ton/core";
 
     const contractStore: any = inject("contractStore");
 
