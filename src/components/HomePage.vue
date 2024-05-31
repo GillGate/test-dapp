@@ -23,7 +23,7 @@
     import { inject, onBeforeMount, computed, ComputedRef } from "vue";
     // import CustomTonConnect from "../components/CustomTonConnect.vue";
     import TonConnect from "../components/TonConnect.vue";
-    import { MainContractConfig } from "../contracts/MainContract";
+    import { MainContractConfig } from "../wrappers/MainContract";
     import { Address } from "@ton/core";
 
     const contractStore: any = inject("contractStore");

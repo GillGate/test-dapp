@@ -1,6 +1,6 @@
 import { reactive, readonly } from "vue";
 import { getClient } from "../service/endpoint.service";
-import { MainContract, MainContractConfig } from "../contracts/MainContract";
+import { MainContract, MainContractConfig } from "../wrappers/MainContract";
 import { Address, OpenedContract, fromNano, toNano } from "@ton/core";
 import { sender } from "../service/connector.service";
 
