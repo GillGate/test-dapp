@@ -1,0 +1,13 @@
+{
+    "name":"Duck #03",
+    "description":"Let's mint...",
+    "image":"https://gillgate.github.io/test-dapp/nft/img/3.jpg",
+    "attributes": [
+        {
+            "value":"NOT so cool"
+        },
+        {
+            "test": "test field"
+        }
+    ]
+}
