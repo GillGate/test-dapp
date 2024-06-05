@@ -1,0 +1,11 @@
+{
+    "name":"Duck #02",
+    "description":"Let's mint some ducks...",
+    "image":"https://gillgate.github.io/test-dapp/nft/img/2.jpg",
+    "attributes": [
+        {
+            "trait_type":"Greatness",
+            "value":"Super Cool"
+        }
+    ]
+}
