@@ -1,7 +1,6 @@
 <template>
     <div class="page">
         <div class="page__wallets">
-            <!-- <CustomTonConnect /> -->
             <TonConnect />
         </div>
         <div class="page__info">
@@ -17,12 +16,13 @@
 
             <button v-if="isAdmin" class="page__button page__button--withdraw" @click="withdrawFunds">Withdraw funds</button>
         </div>
+        <EditNft />
     </div>
 </template>
 <script setup lang="ts">
     import { inject, onBeforeMount, computed, ComputedRef } from "vue";
-    // import CustomTonConnect from "../components/CustomTonConnect.vue";
     import TonConnect from "../components/TonConnect.vue";
+    import EditNft from "../components/EditNft.vue";
     import { MainContractConfig } from "../wrappers/MainContract";
     import { Address } from "@ton/core";
 
@@ -87,6 +87,15 @@
             margin-top: 45px;
         }
 
+        &__button {
+            margin-bottom: 10px;
+
+            &--edit {
+                margin-top: 16px;
+                background-color: blueviolet;
+            }
+        }
+
         &__controls {
             display: flex;
             flex-wrap: wrap;
@@ -97,4 +106,3 @@
         }
     }
 </style>
-./CustomTonConnect.vue
