@@ -91,7 +91,6 @@
             margin-bottom: 10px;
 
             &--edit {
-                margin-top: 16px;
                 background-color: blueviolet;
             }
         }

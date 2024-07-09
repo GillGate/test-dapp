@@ -1,6 +1,20 @@
-import { Address, beginCell, Cell, toNano, TupleItemCell, TupleItemInt, TupleItemSlice } from "@ton/core";
+import {
+    Address,
+    beginCell,
+    Cell,
+    external,
+    internal,
+    storeMessage,
+    toNano,
+    TupleItemCell,
+    TupleItemInt,
+    TupleItemSlice,
+} from "@ton/core";
 import { getClient } from "./endpoint.service";
 import { connector } from "./connector.service";
+import { WalletContractV4 } from "@ton/ton";
+import { mnemonicToWalletKey } from "@ton/crypto";
+import { delay } from "../utils/delay";
 
 export function flattenSnakeCell(cell: Cell) {
     let c: Cell | null = cell;
@@ -53,8 +67,8 @@ export async function EditNftEditable() {
     }
 
     const client4 = await getClient();
-    const latestBlock = await client4.getLastBlock();
-    const lastSeqno = latestBlock.last.seqno;
+    let latestBlock = await client4.getLastBlock();
+    let lastSeqno = latestBlock.last.seqno;
     const { result: contentInfo } = await client4.runMethod(lastSeqno, address, "get_nft_data");
     console.log(contentInfo);
 
@@ -69,17 +83,17 @@ export async function EditNftEditable() {
     const content = flattenSnakeCell(sliceNftContent.cell).toString("utf-8");
 
     nftContent = content;
-    console.log("loaded nft content", content)
+    console.log("loaded nft content", content);
 
-    nftContent = "1.json";
-    console.log("current nft content", nftContent)
+    nftContent = "2.json";
+    console.log("current nft content", nftContent);
 
     let editContent = CreateEditableNftEditBody(nftContent);
 
-    const editContentString = editContent.toBoc().toString('base64').replace(/\//g, '_').replace(/\+/g, '-')
+    const editContentString = editContent.toBoc().toString("base64").replace(/\//g, "_").replace(/\+/g, "-");
     console.log("editContent", editContentString);
 
-    connector.sendTransaction({
+    /*connector.sendTransaction({
         validUntil: Math.floor(Date.now() / 1000) + 60, // 60 sec
         messages: [
             {
@@ -89,4 +103,80 @@ export async function EditNftEditable() {
             },
         ]
     });
+    */
+
+    latestBlock = await client4.getLastBlock();
+    lastSeqno = latestBlock.last.seqno;
+
+    const keyPair = await mnemonicToWalletKey(import.meta.env.DAPP_WALLET_OWNER_SEED.split(" "));
+
+    console.log("keyPair", keyPair);
+
+    const wallet = WalletContractV4.create({
+        workchain: 0,
+        publicKey: keyPair.publicKey,
+    });
+
+    console.log("wallet", wallet);
+
+    const transfer = wallet.createTransfer({
+        seqno: lastSeqno,
+        secretKey: keyPair.secretKey,
+        messages: [
+            internal({
+                to: address,
+                value: `${toNano(0.01)}`,
+                body: editContentString,
+            })
+        ]
+    });
+
+    console.log("transfer", transfer);
+
+    const msg = beginCell()
+        .store(
+            storeMessage(
+                external({
+                    to: wallet.address,
+                    body: transfer,
+                })
+            )
+        )
+        .endCell();
+
+    console.log("msg", msg);
+
+    let k = 0;
+    async function updateNft() {
+        while (k < 100) {
+            try {
+                const res = await client4.sendMessage(msg.toBoc());
+                console.log("send msg res", res);
+                k = 100;
+                return res;
+            } catch (e) {
+                console.log(`attempt ${k}`);
+                k++;
+
+                console.log("ton api error", e);
+
+                let res = await updateNft();
+                if (!!res) {
+                    k = 100;
+                    break;
+                }
+                await delay(5100);
+
+                if (e.status === 429) {
+                    delay(200);
+                } else {
+                    console.log("ton api error", e);
+                    k = 100;
+                    break;
+                }
+            }
+        }
+    }
+
+    await updateNft();
 }

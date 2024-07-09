@@ -27,3 +27,5 @@ dist-ssr
 .old
 
 package-lock.json
+
+data.txt
