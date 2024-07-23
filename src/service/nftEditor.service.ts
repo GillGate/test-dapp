@@ -4,6 +4,7 @@ import {
     Cell,
     external,
     internal,
+    // SendMode,
     storeMessage,
     toNano,
     TupleItemCell,
@@ -11,10 +12,11 @@ import {
     TupleItemSlice,
 } from "@ton/core";
 import { getClient } from "./endpoint.service";
-import { connector } from "./connector.service";
+// import { connector } from "./connector.service";
 import { WalletContractV4 } from "@ton/ton";
 import { mnemonicToWalletKey } from "@ton/crypto";
 import { delay } from "../utils/delay";
+// import TonWeb from "tonweb";
 
 export function flattenSnakeCell(cell: Cell) {
     let c: Cell | null = cell;
@@ -66,7 +68,8 @@ export async function EditNftEditable() {
         return;
     }
 
-    const client4 = await getClient();
+    const { client, client4 } = await getClient();
+    // const client4 = await getClient();
     let latestBlock = await client4.getLastBlock();
     let lastSeqno = latestBlock.last.seqno;
     const { result: contentInfo } = await client4.runMethod(lastSeqno, address, "get_nft_data");
@@ -93,7 +96,8 @@ export async function EditNftEditable() {
     const editContentString = editContent.toBoc().toString("base64").replace(/\//g, "_").replace(/\+/g, "-");
     console.log("editContent", editContentString);
 
-    /*connector.sendTransaction({
+    /*
+    connector.sendTransaction({
         validUntil: Math.floor(Date.now() / 1000) + 60, // 60 sec
         messages: [
             {
@@ -104,9 +108,15 @@ export async function EditNftEditable() {
         ]
     });
     */
+    
 
     latestBlock = await client4.getLastBlock();
     lastSeqno = latestBlock.last.seqno;
+
+    let latestBlock2 = await client.getMasterchainInfo();
+    let lastSeqno2 = latestBlock2.latestSeqno;
+
+    console.log(latestBlock.last)
 
     const keyPair = await mnemonicToWalletKey(import.meta.env.DAPP_WALLET_OWNER_SEED.split(" "));
 
@@ -120,13 +130,13 @@ export async function EditNftEditable() {
     console.log("wallet", wallet);
 
     const transfer = wallet.createTransfer({
-        seqno: lastSeqno,
+        seqno: lastSeqno2,
         secretKey: keyPair.secretKey,
         messages: [
             internal({
                 to: address,
                 value: `${toNano(0.01)}`,
-                body: editContentString,
+                body: "eeeh blyaat",
             })
         ]
     });
@@ -146,14 +156,30 @@ export async function EditNftEditable() {
 
     console.log("msg", msg);
 
+    /*
+    try {
+        // let res = await client4.sendMessage(msg.toBoc());
+        // console.log("res", res);
+        await client.sendFile(msg.toBoc());
+        console.log("external msg was sent!")
+    }
+    catch(e) {
+        console.warn(e);
+    }
+    */
+
+    console.log("test github env", import.meta.env.DAPP_WALLET_OWNER_SEED);
+
     let k = 0;
     async function updateNft() {
         while (k < 100) {
             try {
-                const res = await client4.sendMessage(msg.toBoc());
-                console.log("send msg res", res);
+                // let provider = client4.open(wallet);
+                // provider.send(msg);
+                await client.sendFile(msg.toBoc());
+                console.log("external msg was sent!")
                 k = 100;
-                return res;
+                return true;
             } catch (e) {
                 console.log(`attempt ${k}`);
                 k++;
@@ -161,7 +187,129 @@ export async function EditNftEditable() {
                 console.log("ton api error", e);
 
                 let res = await updateNft();
-                if (!!res) {
+                if (res) {
+                    k = 100;
+                    break;
+                }
+                await delay(3000);
+
+                if (e.status === 429) {
+                    await delay(1000);
+                } else {
+                    console.log("ton api error", e);
+                    k = 100;
+                    break;
+                }
+            }
+        }
+    }
+
+    await updateNft();
+}
+
+
+
+
+
+
+        /*
+        const tonweb = new TonWeb();
+
+        const message = editContentString; // the message you want to send
+        const senderAddress = wallet.address; // your TON wallet address
+        const recipientAddress = nftAddress; // the recipient's TON wallet address
+
+        async function sendMessage() {
+        try {
+            const senderWallet = client.wallet.createWallet(senderAddress);
+            const recipientWallet = client.wallet.createWallet(recipientAddress);
+
+            const messageBody = tonweb.utils.bytes.fromUTF8(message);
+            const messageCell = new tonweb.boc.Cell();
+            messageCell.bits.writeUint(0, 32); // message type (0 = text message)
+            messageCell.bits.writeBytes(messageBody);
+
+            const transaction = await senderWallet.createTransaction({
+            to: recipientWallet.address,
+            value: 100, // 100 nanotons (you can adjust the value)
+            data: messageCell,
+            });
+
+            await client.processing.sendTransaction(transaction);
+            console.log('Message sent!');
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+        }
+
+        sendMessage();
+        */
+
+
+        /*
+        const wallet = tonweb.wallet.create({publicKey: keyPair.publicKey});
+        // const seqno = await wallet.methods.seqno().call();
+
+        await wallet.methods.transfer({
+            secretKey: keyPair.secretKey,
+            toAddress: nftAddress,
+            amount: `${toNano(0.01)}`, // 0.01 TON
+            seqno: lastSeqno,
+            payload: editContentString,
+            sendMode: 3,
+        }).send();
+        */
+
+        /*
+        let provider = client.open(wallet);
+        // provider.send(msg);
+        await provider.sendTransfer({
+            seqno: lastSeqno,
+            secretKey: keyPair.secretKey,
+            messages: [
+                internal({
+                    to: address,
+                    value: `${toNano(0.01)}`,
+                    body: editContent.toBoc().toString("base64"),
+                })
+            ]
+        })
+        */
+
+    /*
+
+    let k = 0;
+    async function updateNft() {
+        while (k < 100) {
+            try {
+                let provider = client4.open(wallet);
+                provider.send(msg);
+                // provider.sendTransfer({
+                //     seqno: lastSeqno,
+                //     secretKey: keyPair.secretKey,
+                //     messages: [
+                //         internal({
+                //             to: address,
+                //             value: `${toNano(0.01)}`,
+                //             body: editContent.toBoc().toString('base64'),
+                //         })
+                //     ]
+                // });
+                k = 100;
+                return true;
+
+                // wallet.sendTransfer(transfer)
+                // const res = await client4.sendMessage(msg.toBoc());
+                // const res = await client4.sendFile(msg.toBoc());
+                // console.log("send msg res", res);
+            } catch (e) {
+                console.log(`attempt ${k}`);
+                k++;
+
+                console.log("ton api error", e);
+
+                let res = await updateNft();
+                if (res) {
                     k = 100;
                     break;
                 }
@@ -179,4 +327,46 @@ export async function EditNftEditable() {
     }
 
     await updateNft();
+
+    */
+
+
+/* 
+const tonweb = require('tonweb');
+
+const { TonClient } = tonweb;
+
+const client = new TonClient({
+  endpoint: 'https://toncenter.com/api/v2/jsonRPC', // or any other TON node endpoint
+});
+
+const message = 'Hello, TON!'; // the message you want to send
+const senderAddress = 'EQ...'; // your TON wallet address
+const recipientAddress = 'EQ...'; // the recipient's TON wallet address
+
+async function sendMessage() {
+  try {
+    const senderWallet = client.wallet.createWallet(senderAddress);
+    const recipientWallet = client.wallet.createWallet(recipientAddress);
+
+    const messageBody = tonweb.utils.bytes.fromUTF8(message);
+    const messageCell = new tonweb.boc.Cell();
+    messageCell.bits.writeUint(0, 32); // message type (0 = text message)
+    messageCell.bits.writeBytes(messageBody);
+
+    const transaction = await senderWallet.createTransaction({
+      to: recipientWallet.address,
+      value: 100, // 100 nanotons (you can adjust the value)
+      data: messageCell,
+    });
+
+    await client.processing.sendTransaction(transaction);
+    console.log('Message sent!');
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
 }
+
+sendMessage();
+
+*/

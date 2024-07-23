@@ -20,7 +20,8 @@ const methods = {
         let connectionAttempts = 0;
     
         try {
-            client = await getClient();
+            const { client4 } = await getClient();
+            client = client4;
         }
         catch(e) {
             if(connectionAttempts < 30) {

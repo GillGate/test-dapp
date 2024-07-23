@@ -47,6 +47,14 @@ jobs:
           name: production-files
           path: ./dist
 
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DAPP_ENV }}" > .env
+
+      # - name: Add Token
+      #   run: |
+      #     echo "BOT_API_TOKEN=${{ secrets.DAPP_SEED }}" >> .env
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
