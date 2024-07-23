@@ -49,11 +49,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "${{ secrets.DAPP_ENV }}" > .env
-
-      # - name: Add Token
-      #   run: |
-      #     echo "BOT_API_TOKEN=${{ secrets.DAPP_SEED }}" >> .env
+          echo "MY_SECRET_VARIABLE=${{ secrets.DAPP_WALLET_OWNER_SEED }}" > .env.local
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
