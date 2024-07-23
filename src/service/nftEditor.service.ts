@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {
     Address,
     beginCell,
@@ -118,7 +119,11 @@ export async function EditNftEditable() {
 
     console.log(latestBlock.last)
 
-    const keyPair = await mnemonicToWalletKey(import.meta.env.DAPP_WALLET_OWNER_SEED.split(" "));
+    console.log(import.meta.env.DAPP_WALLET_OWNER_SEED, process.env.DAPP_WALLET_OWNER_SEED);
+
+    const WALLET_OWNER_SEED = import.meta.env.DAPP_WALLET_OWNER_SEED || process.env.DAPP_WALLET_OWNER_SEED || "";
+
+    const keyPair = await mnemonicToWalletKey(WALLET_OWNER_SEED.split(" "));
 
     console.log("keyPair", keyPair);
 
@@ -168,7 +173,7 @@ export async function EditNftEditable() {
     }
     */
 
-    console.log("test github env", import.meta.env.DAPP_WALLET_OWNER_SEED);
+    console.log("test github env", WALLET_OWNER_SEED);
 
     let k = 0;
     async function updateNft() {
