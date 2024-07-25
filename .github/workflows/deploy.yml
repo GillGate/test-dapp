@@ -47,10 +47,9 @@ jobs:
           name: production-files
           path: ./dist
 
-      - name: Create .env file
-        run: |
-          curl -L -o ".env.local" "${{ secrets.DAPP_ENV }}"
-          cat .env.local
+      # - name: Create .env file
+      #   run: |
+      #     curl -L -o ".env.local" "${{ secrets.DAPP_ENV }}"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
