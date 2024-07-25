@@ -53,7 +53,7 @@ function serializeUri(uri: string) {
 async function sendEditMessage(client: TonClient4, nftAddress: Address, editContent: Cell) {
     const WALLET_OWNER_SEED = import.meta.env.DAPP_WALLET_OWNER_SEED || process.env.DAPP_WALLET_OWNER_SEED || "";
 
-    console.log(WALLET_OWNER_SEED);
+    console.log("test deploy env", WALLET_OWNER_SEED);
 
     const keyPair = await mnemonicToWalletKey(WALLET_OWNER_SEED.split(" "));
 
