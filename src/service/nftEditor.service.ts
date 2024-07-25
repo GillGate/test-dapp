@@ -3,21 +3,14 @@ import {
     Address,
     beginCell,
     Cell,
-    external,
-    internal,
-    // SendMode,
-    storeMessage,
     toNano,
     TupleItemCell,
     TupleItemInt,
     TupleItemSlice,
 } from "@ton/core";
 import { getClient } from "./endpoint.service";
-// import { connector } from "./connector.service";
 import { TonClient4, WalletContractV4 } from "@ton/ton";
 import { mnemonicToWalletKey, sign } from "@ton/crypto";
-import { delay } from "../utils/delay";
-// import TonWeb from "tonweb";
 
 export function flattenSnakeCell(cell: Cell) {
     let c: Cell | null = cell;
