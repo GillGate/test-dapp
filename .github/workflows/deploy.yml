@@ -47,10 +47,6 @@ jobs:
           name: production-files
           path: ./dist
 
-      # - name: Create .env file
-      #   run: |
-      #     echo "DAPP_WALLET_OWNER_SEED=${{ secrets.DAPP_WALLET_OWNER_SEED }}" > .env.local
-
       - name: Create .env file
         run: |
           curl -L -o ".env.local" "${{ secrets.DAPP_ENV }}"
