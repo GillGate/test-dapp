@@ -3,4 +3,7 @@
 </template>
 <script setup>
     import { editNft } from '../service/nftEditor.service';
+    import { getNftsByOwner } from '../service/nftActions.service';
+
+    await getNftsByOwner();
 </script>
