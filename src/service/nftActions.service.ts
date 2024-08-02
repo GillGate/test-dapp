@@ -7,7 +7,7 @@ export async function getNfts() {
     const res = await fetch(`${baseURL}/v2/nfts/collections/${nftCollectionAddress}/items`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${import.meta.env.DAPP_TC_API_KEY}`
+            'Authorization': `Bearer ${import.meta.env.DAPP_TC_API_KEY}`,
         }
     });
 
@@ -17,7 +17,7 @@ export async function getNfts() {
 
     let filteredNfts = [];
 
-    nft_items.forEach((nftItem) => {
+    nft_items.forEach(nftItem => {
         filteredNfts.push({
             address: nftItem.address,
             index: nftItem.index,
@@ -29,4 +29,12 @@ export async function getNfts() {
     console.log("filteredNfts", filteredNfts);
 
     return filteredNfts;
+}
+
+/**
+ * await connector.connectionRestored;
+ * const ownerAddr = connector.account?.address ?? '';
+ */
+export async function getNftsByOwner(ownerAddr: string) {
+    return  (await getNfts()).filter(nftItem => nftItem.ownerAddr === ownerAddr);
 }

@@ -5,6 +5,7 @@
     import { onMounted, inject, computed } from "vue";
     import { connector } from "../service/connector.service";
     import { Address } from "@ton/core";
+    import { getNftsByOwner } from "../service/nftActions.service";
 
     const contractStore: any = inject("contractStore");
 
@@ -13,6 +14,8 @@
         connector.uiOptions = {
             buttonRootId: 'ton-connect'
         }
+
+        console.log("my nft", await getNftsByOwner(connector?.account?.address));
     });
 
     const walletAddress = computed(() => 
