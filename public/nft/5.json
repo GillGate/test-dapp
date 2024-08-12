@@ -1,0 +1,11 @@
+{
+    "name": "Duck #05",
+    "description": "Let's read some news...",
+    "image": "https://gillgate.github.io/test-dapp/nft/img/1.jpg",
+    "attributes": [
+        {
+            "trait_type": "Level",
+            "value": "1"
+        }
+    ]
+}
