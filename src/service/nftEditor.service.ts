@@ -9,7 +9,7 @@ import {
     TupleItemSlice,
 } from "@ton/core";
 import { getClient } from "./endpoint.service";
-import { TonClient4, WalletContractV3R2, WalletContractV4 } from "@ton/ton";
+import { TonClient4, WalletContractV3R2 } from "@ton/ton";
 import { mnemonicToWalletKey, sign } from "@ton/crypto";
 
 export function flattenSnakeCell(cell: Cell) {
