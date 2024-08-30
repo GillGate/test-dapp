@@ -9,7 +9,7 @@ import {
     TupleItemSlice,
 } from "@ton/core";
 import { getClient } from "./endpoint.service";
-import { TonClient4, WalletContractV4 } from "@ton/ton";
+import { TonClient4, WalletContractV3R2, WalletContractV4 } from "@ton/ton";
 import { mnemonicToWalletKey, sign } from "@ton/crypto";
 
 export function flattenSnakeCell(cell: Cell) {
@@ -53,18 +53,12 @@ function serializeUri(uri: string) {
 async function sendEditMessage(client: TonClient4, nftAddress: Address, editContent: Cell) {
     const WALLET_OWNER_SEED = import.meta.env.DAPP_WALLET_OWNER_SEED || process.env.DAPP_WALLET_OWNER_SEED || "";
 
-    console.log("test deploy env", WALLET_OWNER_SEED);
-
     const keyPair = await mnemonicToWalletKey(WALLET_OWNER_SEED.split(" "));
 
-    console.log("keyPair", keyPair);
-
-    const wallet = WalletContractV4.create({
+    const wallet = WalletContractV3R2.create({
         workchain: 0,
         publicKey: keyPair.publicKey,
     });
-
-    console.log("wallet", wallet);
 
     const provider = client.open(wallet);
     let wSeqno = await provider.getSeqno();
@@ -77,7 +71,7 @@ async function sendEditMessage(client: TonClient4, nftAddress: Address, editCont
         .storeBit(0) // bounced
         .storeUint(0, 2) // src -> addr_none
         .storeAddress(nftAddress)
-        .storeCoins(toNano("0.01")) // amount
+        .storeCoins(toNano("0.005")) // amount
         .storeBit(0) // Extra currency
         .storeCoins(0) // IHR Fee
         .storeCoins(0) // Forwarding Fee
@@ -92,7 +86,7 @@ async function sendEditMessage(client: TonClient4, nftAddress: Address, editCont
         .storeUint(698983191, 32) // subwallet_id | We consider this further
         .storeUint(Math.floor(Date.now() / 1e3) + 60, 32) // Transaction expiration time, +60 = 1 minute
         .storeUint(wSeqno, 32) // store seqno
-        .storeUint(0, 8) // ?
+        //.storeUint(0, 8) // for v4r2 Wallet
         .storeUint(3, 8) // store mode of our internal transaction
         .storeRef(internalMessage); // store our internalMessage as a reference
 
@@ -116,21 +110,20 @@ async function sendEditMessage(client: TonClient4, nftAddress: Address, editCont
     return await client.sendMessage(externalMessage.toBoc());
 }
 
-export async function editNft() {
-    const nftAddress = "EQBEUJRKBpr3vCWWcCTkfxxUpiDIfYOc4ZOaZ_itikoDyq89";
-    let nftContent = "";
-
-    let address: Address;
+export async function editNft(address:string) {
+    let nftAddress: Address;
     try {
-        address = Address.parse(nftAddress);
+        nftAddress = Address.parse(address);
     } catch (e) {
         return;
     }
 
+    const MAX_LVL = 7;
+
     const client = await getClient();
     let latestBlock = await client.getLastBlock();
     let lastSeqno = latestBlock.last.seqno;
-    const { result: contentInfo } = await client.runMethod(lastSeqno, address, "get_nft_data");
+    const { result: contentInfo } = await client.runMethod(lastSeqno, nftAddress, "get_nft_data");
     console.log(contentInfo);
 
     const [, , , , sliceNftContent] = contentInfo as [
@@ -143,18 +136,23 @@ export async function editNft() {
 
     const content = flattenSnakeCell(sliceNftContent.cell).toString("utf-8");
 
-    nftContent = content;
+    let nftContent = content;
     console.log("loaded nft content", content);
 
-    nftContent = "2.json";
-    console.log("current nft content", nftContent);
+    let currentLvl = parseInt(content.split('-')[1]);
+
+    if(currentLvl === MAX_LVL) {
+        throw('This NFT has reached max level!');
+    }
+
+    nftContent = content.slice(0, -6) + `${++currentLvl}.json`;
+
+    console.log("updated nft content", nftContent);
 
     let editContent = CreateEditableNftEditBody(nftContent);
 
-    //const editContentString = editContent.toBoc().toString("base64").replace(/\//g, "_").replace(/\+/g, "-");
-
     try {
-        let res = await sendEditMessage(client, address, editContent);
+        let res = await sendEditMessage(client, nftAddress, editContent);
         console.log("sendEditMessage res", res);
     }
     catch(e) {
