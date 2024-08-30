@@ -1,0 +1,11 @@
+{
+    "name": "Duck #1 Lvl 2",
+    "description": "Let's edit some items...",
+    "image": "https://gillgate.github.io/test-dapp/test-collection/1/1-2.jpg",
+    "attributes": [
+        {
+            "trait_type": "Level",
+            "value": "2"
+        }
+    ]
+}
