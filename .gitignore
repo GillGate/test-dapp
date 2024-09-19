@@ -26,6 +26,6 @@ dist-ssr
 .vscode
 .old
 
-package-lock.json
+# package-lock.json
 
 data.txt
