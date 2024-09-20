@@ -1,11 +1,7 @@
 {
-    "name": "Duck #08",
-    "description": "Let's edit some items...",
-    "image": "https://gillgate.github.io/test-dapp/nft/img/logo.jpg",
-    "attributes": [
-        {
-            "trait_type": "Level",
-            "value": "1"
-        }
-    ]
+    "name": "Test animation 2",
+    "description": "...",
+    "image": "https://wallet.akronix.io/nft/blaster/1.jpg",
+    "content_url": "https://gillgate.github.io/test-dapp/nft/img/3-2.mp4",
+    "attributes": []
 }
