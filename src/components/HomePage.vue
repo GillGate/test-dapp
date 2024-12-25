@@ -40,6 +40,9 @@
         }
 
         loadContractState();
+
+        // (async () => await sendCancelOrder("kQALAedrCCqsEVnMdUoJ5TkfJZqSCjhakNFwH5jrnaetmcjU"))();
+
     });
 
     const senderWallet = computed(() => contractStore.getters.getSenderWallet());
