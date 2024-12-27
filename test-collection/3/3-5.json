@@ -1,0 +1,11 @@
+{
+    "name": "Bomzh #?",
+    "description": "Let's edit some items...",
+    "image": "https://gillgate.github.io/test-dapp/test-collection/3/3-5.jpg",
+    "attributes": [
+        {
+            "trait_type": "Level",
+            "value": "5"
+        }
+    ]
+}
