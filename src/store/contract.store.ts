@@ -12,7 +12,9 @@ const state = reactive({
 });
 const methods = {
     async initializeContract(client: any) {
-        const contract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_CONTRACT_ADDRESS));
+        // const contract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_CONTRACT_ADDRESS));
+        const contract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_BALANCE_ADDRESS));
+        // const balanceContract = new MainContract(Address.parse(import.meta.env.DAPP_MAIN_CONTRACT_ADDRESS));
         state.contract = client.open(contract);
     },
     async initContractState():Promise<any> {
@@ -36,7 +38,7 @@ const methods = {
             let { balance } = await state.contract.getBalance();
             state.balance = +fromNano(balance);
 
-            state.data = await state.contract.getData();
+            // state.data = await state.contract.getData();
 
             return "Contract state updated!";
         }

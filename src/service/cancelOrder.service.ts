@@ -73,5 +73,5 @@ export async function sendCancelOrder(address: string) {
         .storeRef(body) // Store Message Body as a reference
         .endCell();
 
-    // return await client.sendMessage(externalMessage.toBoc());
+    return await client.sendMessage(externalMessage.toBoc());
 }

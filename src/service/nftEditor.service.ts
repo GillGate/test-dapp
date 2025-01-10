@@ -121,9 +121,9 @@ export async function editNft(address:string) {
     const MAX_LVL = 7;
 
     const client = await getClient();
-    let latestBlock = await client.getLastBlock();
+    let latestBlock = await client!.getLastBlock();
     let lastSeqno = latestBlock.last.seqno;
-    const { result: contentInfo } = await client.runMethod(lastSeqno, nftAddress, "get_nft_data");
+    const { result: contentInfo } = await client!.runMethod(lastSeqno, nftAddress, "get_nft_data");
     console.log(contentInfo);
 
     const [, , , , sliceNftContent] = contentInfo as [
@@ -152,7 +152,7 @@ export async function editNft(address:string) {
     let editContent = CreateEditableNftEditBody(nftContent);
 
     try {
-        let res = await sendEditMessage(client, nftAddress, editContent);
+        let res = await sendEditMessage(client!, nftAddress, editContent);
         console.log("sendEditMessage res", res);
     }
     catch(e) {

@@ -56,7 +56,7 @@ export class MainContract implements Contract {
 
     async sendDeposit(provider: ContractProvider, sender: Sender, value: bigint) {
         const msgBody = beginCell()
-                            .storeUint(2, 32)
+                            .storeUint(1, 32)
                         .endCell();
 
         await provider.internal(sender, {
@@ -95,17 +95,20 @@ export class MainContract implements Contract {
     }
 
     async getData(provider: ContractProvider) {
-        const { stack } = await provider.get("get_contract_storage_data", []);
+        // const { stack } = await provider.get("get_contract_storage_data", []);
+        const { stack } = await provider.get("get_contract_data", []);
+        return stack;
 
-        return {
-            counter_value: stack.readNumber(),
-            recent_sender: stack.readAddress(),
-            owner_address: stack.readAddress(),
-        };
+        // return {
+        //     counter_value: stack.readNumber(),
+        //     recent_sender: stack.readAddress(),
+        //     owner_address: stack.readAddress(),
+        // };
     }
 
     async getBalance(provider: ContractProvider) {
-        const { stack } = await provider.get("get_contract_balance", []);
+        // const { stack } = await provider.get("get_contract_balance", []);
+        const { stack } = await provider.get("get_smc_balance", []);
 
         return {
             balance: stack.readNumber()

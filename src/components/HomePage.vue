@@ -5,26 +5,26 @@
         </div>
         <div class="page__info">
             Contract balance: {{ contractBalance }} <br />
+            <!-- <br /> -->
+            <!-- Counter value: {{ contractData.counter_value }} <br />
             <br />
-            Counter value: {{ contractData.counter_value }} <br />
-            <br />
-            Recent sender: {{ recentSenderVisibleAddress }}
+            Recent sender: {{ recentSenderVisibleAddress }} -->
         </div>
         <div v-if="senderWallet !== ''" class="page__controls">
-            <button class="page__button" @click="sendIncrement">Send increment</button>
+            <!-- <button class="page__button" @click="sendIncrement">Send increment</button> -->
             <button class="page__button" @click="sendDeposit">Send deposit</button>
-
-            <button v-if="isAdmin" class="page__button page__button--withdraw" @click="withdrawFunds">Withdraw funds</button>
+            <button class="page__button page__button--withdraw" @click="withdrawFunds">Withdraw funds</button>
         </div>
         <EditNft />
     </div>
 </template>
 <script setup lang="ts">
-    import { inject, onBeforeMount, computed, ComputedRef } from "vue";
+    import { inject, onBeforeMount, computed } from "vue";
     import TonConnect from "../components/TonConnect.vue";
-    import EditNft from "../components/EditNft.vue";
-    import { MainContractConfig } from "../wrappers/MainContract";
-    import { Address } from "@ton/core";
+    // import EditNft from "../components/EditNft.vue";
+    // import { MainContractConfig } from "../wrappers/MainContract";
+    // import { Address } from "@ton/core";
+    import { sendWithdrawMessage } from '../service/withdrawFunds.service';
 
     const contractStore: any = inject("contractStore");
 
@@ -48,40 +48,40 @@
     const senderWallet = computed(() => contractStore.getters.getSenderWallet());
 
     const contractBalance = computed(() => contractStore.getters.getBalance());
-    const contractData:ComputedRef<MainContractConfig> = computed(
-        () => contractStore.getters.getData()
-    );
+    // const contractData:ComputedRef<MainContractConfig> = computed(
+    //     () => contractStore.getters.getData()
+    // );
 
-    const recentSenderAddress = computed(() =>
-        contractData.value?.recent_sender?.toString({ 
-            bounceable: false,
-            testOnly: true,
-        }) ?? ''
-    );
+    // const recentSenderAddress = computed(() =>
+    //     contractData.value?.recent_sender?.toString({ 
+    //         bounceable: false,
+    //         testOnly: true,
+    //     }) ?? ''
+    // );
 
-    const isAdmin = computed(() => {
-        if(senderWallet?.value) {
-            return Address.parse(senderWallet?.value).toRawString() ===
-                contractData.value?.owner_address?.toRawString()
-        }
+    // const isAdmin = computed(() => {
+    //     if(senderWallet?.value) {
+    //         return Address.parse(senderWallet?.value).toRawString() ===
+    //             contractData.value?.owner_address?.toRawString()
+    //     }
 
-        return false;
-    });
+    //     return false;
+    // });
 
-    const recentSenderVisibleAddress = computed(() => 
-        recentSenderAddress.value?.slice(0, 5) + 
-        '…' + 
-        recentSenderAddress.value?.slice(recentSenderAddress.value.length - 5)
-    );
+    // const recentSenderVisibleAddress = computed(() => 
+    //     recentSenderAddress.value?.slice(0, 5) + 
+    //     '…' + 
+    //     recentSenderAddress.value?.slice(recentSenderAddress.value.length - 5)
+    // );
 
-    const sendIncrement = () => {
-        return contractStore.methods.sendIncrement(2);
-    };
+    // const sendIncrement = () => {
+    //     return contractStore.methods.sendIncrement();
+    // };
     const sendDeposit = () => {
-        contractStore.methods.sendDeposit(1);
+        contractStore.methods.sendDeposit(2);
     };
     const withdrawFunds = () => {
-        // contractStore.methods.
+        return sendWithdrawMessage("0QBX_oJ8xet3pvRJ6JK1GHq9oUiQjct0ohQlgYX1OGopNcOP", 1.8);
     }
 </script>
 <style lang="less">

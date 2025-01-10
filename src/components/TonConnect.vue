@@ -1,16 +1,14 @@
 <template>
     <div id="ton-connect" class="tonConnect"></div>
-
-    <br />
-
-    <button @click="sendTx">Test tx</button>
+    <!-- <br /> -->
+    <!-- <button @click="sendTx">Test tx</button> -->
 </template>
 <script setup lang="ts">
     import { onMounted, inject, computed } from "vue";
-    import { connector, sender, sendTx } from '../service/connector.service';
+    import { connector, /*sender, sendTx*/ } from '../service/connector.service';
     import { Address } from "@ton/core";
-    import { getNftsByOwner } from "../service/nftActions.service";
-    import { SendTransactionRequest } from '@tonconnect/ui';
+    // import { getNftsByOwner } from "../service/nftActions.service";
+    // import { SendTransactionRequest } from '@tonconnect/ui';
 
     const contractStore: any = inject("contractStore");
 

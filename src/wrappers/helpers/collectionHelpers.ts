@@ -1,4 +1,4 @@
-import { Address, DictionaryValue, beginCell } from "ton-core"
+import { Address, DictionaryValue, beginCell } from "@ton/core"
 
 export type RoyaltyParams = {
     royaltyFactor: number,

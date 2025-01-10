@@ -1,5 +1,12 @@
 import { Address } from "@ton/core";
 
+interface NftItem {
+    index: number,
+    address: Address | null,
+    ownerAddr: Address,
+    metadata: string
+};
+
 export async function getNfts() {
     const nftCollectionAddress = Address.parse(import.meta.env.DAPP_COLLECTION_ADDRESS);
     const baseURL = import.meta.env.DAPP_TONAPI_ENDPOINT;
@@ -15,7 +22,7 @@ export async function getNfts() {
 
     console.log("nft_items", nft_items);
 
-    let filteredNfts = [];
+    let filteredNfts: NftItem[] = [];
 
     nft_items.forEach(nftItem => {
         filteredNfts.push({

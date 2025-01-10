@@ -8,7 +8,7 @@
   import tonProofStore from './store/ton-proof.store';
   // import { connector } from './service/connector.service';
 
-  provide("contractStore", contractStore);
+  // provide("contractStore", contractStore);
   provide("tonProofStore", tonProofStore);
 
   // connector.restoreConnection();
